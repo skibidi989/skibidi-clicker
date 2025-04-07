@@ -1,57 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>Скибидикер Кликер</title>
   <script src="https://telegram.org/js/games.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
     body {
       margin: 0;
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to top, #d2f0ff, #ffffff);
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(to top, #ffe066, #fff0b3);
       text-align: center;
       overflow: hidden;
     }
+
     h1 {
       margin-top: 20px;
+      font-size: 7vw;
+      color: #ff5722;
+      text-shadow: 2px 2px 4px #fff;
+    }
+
+    #score {
+      font-size: 6vw;
+      font-weight: bold;
       color: #333;
+      margin-bottom: 20px;
       text-shadow: 1px 1px #fff;
     }
-    #score {
-      font-size: 36px;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 20px;
-    }
+
     #toilet {
-      width: 200px;
+      width: 45vw;
+      max-width: 250px;
       transition: transform 0.1s ease;
       cursor: pointer;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
     }
+
     #toilet:active {
-      transform: scale(0.95);
+      transform: scale(0.93);
     }
+
     .skibidi {
       position: absolute;
-      width: 50px;
-      animation: floatUp 2s linear;
+      width: 12vw;
+      max-width: 60px;
+      animation: floatUp 1.8s ease-out;
       pointer-events: none;
     }
+
     @keyframes floatUp {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-200px); opacity: 0; }
+      0% { transform: scale(0.5) translateY(0); opacity: 1; }
+      50% { transform: scale(1.2) translateY(-100px); opacity: 0.8; }
+      100% { transform: scale(1) translateY(-180px); opacity: 0; }
     }
 
     #submit {
       margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 18px;
-      background: #00bfa5;
+      padding: 12px 24px;
+      font-size: 4.5vw;
+      max-width: 90%;
+      background: linear-gradient(45deg, #00c853, #64dd17);
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 15px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
       cursor: pointer;
+    }
+
+    #submit:hover {
+      background: linear-gradient(45deg, #64dd17, #00c853);
     }
   </style>
 </head>
@@ -62,15 +82,20 @@
   <br />
   <button id="submit">Отправить очки</button>
 
+  <audio id="toilet-sound" src="toilet-sound.mp3" preload="auto"></audio>
+
   <script>
     let score = 0;
     const scoreDisplay = document.getElementById('score');
     const toilet = document.getElementById('toilet');
     const submitBtn = document.getElementById('submit');
+    const sound = document.getElementById('toilet-sound');
 
     toilet.addEventListener('click', () => {
       score++;
       scoreDisplay.innerText = score + ' скибидикеров';
+      sound.currentTime = 0;
+      sound.play();
       spawnSkibidi();
     });
 
@@ -78,10 +103,10 @@
       const img = document.createElement('img');
       img.src = 'skibidi-coin.png';
       img.classList.add('skibidi');
-      img.style.left = (toilet.offsetLeft + 80 + Math.random() * 40 - 20) + 'px';
+      img.style.left = (toilet.offsetLeft + toilet.offsetWidth / 2 + Math.random() * 40 - 20) + 'px';
       img.style.top = (toilet.offsetTop + 20) + 'px';
       document.body.appendChild(img);
-      setTimeout(() => img.remove(), 2000);
+      setTimeout(() => img.remove(), 1800);
     }
 
     function submitScore(score) {

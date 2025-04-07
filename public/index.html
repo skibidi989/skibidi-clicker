@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скибидикер Кликер</title>
+  <script src="https://telegram.org/js/games.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to top, #d2f0ff, #ffffff);
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      margin-top: 20px;
+      color: #333;
+      text-shadow: 1px 1px #fff;
+    }
+    #score {
+      font-size: 36px;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 20px;
+    }
+    #toilet {
+      width: 200px;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+    }
+    #toilet:active {
+      transform: scale(0.95);
+    }
+    .skibidi {
+      position: absolute;
+      width: 50px;
+      animation: floatUp 2s linear;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-200px); opacity: 0; }
+    }
+
+    #submit {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 18px;
+      background: #00bfa5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Скибидикер Майнер</h1>
+  <div id="score">0 скибидикеров</div>
+  <img id="toilet" src="toilet-cartoon.png" alt="Toilet" />
+  <br />
+  <button id="submit">Отправить очки</button>
+
+  <script>
+    let score = 0;
+    const scoreDisplay = document.getElementById('score');
+    const toilet = document.getElementById('toilet');
+    const submitBtn = document.getElementById('submit');
+
+    toilet.addEventListener('click', () => {
+      score++;
+      scoreDisplay.innerText = score + ' скибидикеров';
+      spawnSkibidi();
+    });
+
+    function spawnSkibidi() {
+      const img = document.createElement('img');
+      img.src = 'skibidi-coin.png';
+      img.classList.add('skibidi');
+      img.style.left = (toilet.offsetLeft + 80 + Math.random() * 40 - 20) + 'px';
+      img.style.top = (toilet.offsetTop + 20) + 'px';
+      document.body.appendChild(img);
+      setTimeout(() => img.remove(), 2000);
+    }
+
+    function submitScore(score) {
+      if (window.TelegramGameProxy) {
+        TelegramGameProxy.postEvent('score', score.toString());
+      } else {
+        alert("Telegram API не доступен");
+      }
+    }
+
+    submitBtn.addEventListener('click', () => {
+      submitScore(score);
+    });
+  </script>
+</body>
+</html>
